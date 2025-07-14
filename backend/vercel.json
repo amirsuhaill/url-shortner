@@ -1,34 +1,9 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "backend/index.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["backend/package.json", "backend/node_modules/**"] }
-    },
-    {
-      "src": "frontend/index.html",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "frontend/dist" }
-    }
+    { "src": "index.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/:shortUrl([a-zA-Z0-9]{8})",
-      "destination": "/api/:shortUrl"
-    }
-  ],
-  "env": {
-    "VITE_BACKEND_URL": "YOUR_VERCEL_BACKEND_URL"
-  }
+    { "src": "/(.*)", "dest": "index.js" }
+  ]
 }
