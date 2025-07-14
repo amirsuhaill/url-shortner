@@ -7,28 +7,24 @@ function App() {
   const [shortUrl, setShortUrl] = useState('');
   const [message, setMessage] = useState('');
 
-  // IMPORTANT: This will be updated after your backend is deployed on Vercel.
-  // For now, you can leave it as localhost for local testing, but remember to change it.
-  const BASE_BACKEND_URL = process.env.NODE_ENV === 'production'
-    ? 'YOUR_VERCEL_BACKEND_URL' // Replace with your Vercel backend URL (e.g., https://your-app-name.vercel.app)
-    : 'http://localhost:3000';
-
+  const BASE_BACKEND_URL = 'http://localhost:3000';
   const handleShorten = () => {
+    // Send the original URL to the Vercel backend for shortening
     axios.post(`${BASE_BACKEND_URL}/api/short`, { originalUrl })
       .then((res) => {
         // Construct the full short URL using the Vercel backend base URL
-        // If your Vercel backend serves the short URLs from its root, then:
         setShortUrl(`${BASE_BACKEND_URL}/${res.data.url.shortUrl}`);
         setMessage('');
       })
       .catch((err) => {
-        console.error("Error shortening URL:", err);
+        console.error("Error shortening URL:", err); // Use console.error for errors
         setMessage("Something went wrong. Please ensure the URL is valid and the backend is running.");
       });
   }
 
   const handleCopy = async () => {
     try {
+      // Check if shortUrl exists before attempting to copy
       if (shortUrl) {
         await navigator.clipboard.writeText(shortUrl);
         setMessage("Copied to clipboard!");
@@ -42,6 +38,7 @@ function App() {
   };
 
   const handleRedirect = () => {
+    // Open the short URL in a new tab if it exists
     if (shortUrl) {
       window.open(shortUrl, '_blank');
     } else {
@@ -56,7 +53,6 @@ function App() {
         <p className="text-center text-gray-600">
           Transform long, unwieldy URLs into short, shareable links. Track clicks and manage your links with ease.
         </p>
-
         <div className="flex flex-col sm:flex-row gap-4">
           <input
             type="text"
@@ -86,14 +82,15 @@ function App() {
           <button
             onClick={handleCopy}
             className="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
-            disabled={!shortUrl}
+            disabled={!shortUrl} // Disable if no short URL is generated
           >
             Copy
           </button>
+
           <button
             onClick={handleRedirect}
             className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
-            disabled={!shortUrl}
+           disabled={!shortUrl} // Disable if no short URL is generated
           >
             Redirect
           </button>
