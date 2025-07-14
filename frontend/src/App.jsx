@@ -7,37 +7,50 @@ function App() {
   const [shortUrl, setShortUrl] = useState('');
   const [message, setMessage] = useState('');
 
-  
+  // IMPORTANT: This will be updated after your backend is deployed on Vercel.
+  // For now, you can leave it as localhost for local testing, but remember to change it.
+  const BASE_BACKEND_URL = process.env.NODE_ENV === 'production'
+    ? 'YOUR_VERCEL_BACKEND_URL' // Replace with your Vercel backend URL (e.g., https://your-app-name.vercel.app)
+    : 'http://localhost:3000';
 
   const handleShorten = () => {
-    axios.post('https://vercel.com/amirsuhaills-projects/url-shortner', { originalUrl })
+    axios.post(`${BASE_BACKEND_URL}/api/short`, { originalUrl })
       .then((res) => {
-        setShortUrl(`https://vercel.com/amirsuhaills-projects/url-shortner${res.data.url.shortUrl}`);
+        // Construct the full short URL using the Vercel backend base URL
+        // If your Vercel backend serves the short URLs from its root, then:
+        setShortUrl(`${BASE_BACKEND_URL}/${res.data.url.shortUrl}`);
         setMessage('');
       })
       .catch((err) => {
-        console.log(err);
-        setMessage("Something went wrong.");
+        console.error("Error shortening URL:", err);
+        setMessage("Something went wrong. Please ensure the URL is valid and the backend is running.");
       });
   }
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(shortUrl);
-      setMessage("Copied to clipboard!");
+      if (shortUrl) {
+        await navigator.clipboard.writeText(shortUrl);
+        setMessage("Copied to clipboard!");
+      } else {
+        setMessage("No short URL to copy!");
+      }
     } catch (err) {
-      setMessage("Failed to copy!");
+      console.error("Failed to copy:", err);
+      setMessage("Failed to copy! Please try again or copy manually.");
     }
   };
 
   const handleRedirect = () => {
     if (shortUrl) {
       window.open(shortUrl, '_blank');
+    } else {
+      setMessage("No short URL to redirect to!");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex items-center justify-center p-4 font-sans">
       <div className="bg-white shadow-lg rounded-2xl p-8 max-w-xl w-full space-y-6">
         <h1 className="text-3xl font-bold text-purple-700 text-center">Shorten Your URLs</h1>
         <p className="text-center text-gray-600">
@@ -54,16 +67,16 @@ function App() {
           />
           <button
             onClick={handleShorten}
-            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-105"
           >
             Shorten
           </button>
         </div>
 
         {shortUrl && (
-          <div className="text-center">
-            <p className="text-gray-700">Short URL:</p>
-            <a href={shortUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+          <div className="text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <p className="text-gray-700 mb-2">Your Short URL:</p>
+            <a href={shortUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-lg font-medium break-words">
               {shortUrl}
             </a>
           </div>
@@ -72,13 +85,15 @@ function App() {
         <div className="flex justify-center gap-4">
           <button
             onClick={handleCopy}
-            className="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+            className="px-5 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
+            disabled={!shortUrl}
           >
             Copy
           </button>
           <button
             onClick={handleRedirect}
-            className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+            className="px-5 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
+            disabled={!shortUrl}
           >
             Redirect
           </button>
