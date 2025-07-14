@@ -8,6 +8,7 @@ function App() {
   const [message, setMessage] = useState('');
 
   const BASE_BACKEND_URL = 'http://localhost:3000';
+  
   const handleShorten = () => {
     // Send the original URL to the Vercel backend for shortening
     axios.post(`${BASE_BACKEND_URL}/api/short`, { originalUrl })
