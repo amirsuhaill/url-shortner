@@ -7,10 +7,12 @@ function App() {
   const [shortUrl, setShortUrl] = useState('');
   const [message, setMessage] = useState('');
 
+  
+
   const handleShorten = () => {
-    axios.post('http://localhost:3000/api/short', { originalUrl })
+    axios.post('https://vercel.com/amirsuhaills-projects/url-shortner', { originalUrl })
       .then((res) => {
-        setShortUrl(`http://localhost:3000/${res.data.url.shortUrl}`);
+        setShortUrl(`https://vercel.com/amirsuhaills-projects/url-shortner${res.data.url.shortUrl}`);
         setMessage('');
       })
       .catch((err) => {
