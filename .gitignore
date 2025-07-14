@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+dist/
+build/
+.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+.vscode/
+
+# Editor/IDE specific files
+.idea/
+.history/
+
+# Frontend specific
+# If you are using Vite, 'dist' is the default output directory
+# If you were using Create React App, it would be 'build'
+# Add any other frontend build output directories here if different
+# e.g., if you had a 'public' folder for built assets:
+# public/
+
+# Backend specific
+# If your backend generates any specific files you don't want to commit, add them here.
